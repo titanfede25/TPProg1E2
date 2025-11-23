@@ -1,0 +1,51 @@
+{
+    "20123456": {
+        "activo": true,
+        "nombre": "federico",
+        "apellido": "Sznajderhaus",
+        "fechaNacimiento": "15/03/1995",
+        "telefonos": {
+            "telefono1": 1145678901,
+            "telefono2": 34112345678
+        }
+    },
+    "30123456": {
+        "activo": false,
+        "nombre": "Benjam\u00edn",
+        "apellido": "Moyano",
+        "fechaNacimiento": "02/07/1988",
+        "telefonos": {
+            "telefono1": 1122334455
+        }
+    },
+    "40123456": {
+        "activo": true,
+        "nombre": "Samuel",
+        "apellido": "Franco Salazar",
+        "fechaNacimiento": "10/10/2000",
+        "telefonos": {
+            "telefono1": 1155550000,
+            "telefono2": 5491123456789
+        }
+    },
+    "50123456": {
+        "activo": true,
+        "nombre": "Galo",
+        "apellido": "Barus",
+        "fechaNacimiento": "22/11/1999",
+        "telefonos": {
+            "telefono1": 1148484848,
+            "telefono2": 1148484849,
+            "telefono3": 1148484850
+        }
+    },
+    "12345678": {
+        "activo": true,
+        "nombre": "Ejemplo",
+        "apellido": "Usuario",
+        "fechaNacimiento": "01/01/1970",
+        "telefonos": {
+            "telefono1": 1120000000
+        }
+    }
+}
