@@ -1,24 +1,91 @@
 """
 -----------------------------------------------------------------------------------------------
 
-Título: Entrega 1 del TP grupal
-Fecha: Hecho para el 22/10/2025
+Título: Entrega 2 del TP grupal
+Fecha: Hecho para el 24/11/2025
 Autor: Equipo 1. Federico Sznajderhaus, Benjamín Moyano, Samuel Franco Salazar, Galo Barus.
 
 Descripción: Un club deportivo con actividades aranceladas necesita el desarrollo de una aplicación para informatizar la gestión de los pagos de los socios por cada deporte.
 
-Pendientes: Respecto a los inputs que esperan enteros, tenemos pensado utilizar try y except en general (en el main) para que no se rompa el programa completo, en el marco de la entrega final.
+Pendientes:
+
+Comentarios/Observaciones: No agregamos email a deportes ya que eso requeriría contar con un dominio de email institucional, debiendo hacer una validación distinta (no se busca hacerlo sin manejo de expresiones regulares). Otra opción sería crear un mail para cada deporte por separado, pero no es conveniente en la vida real.
 -----------------------------------------------------------------------------------------------
 """
 
 #----------------------------------------------------------------------------------------------
 # MÓDULOS
 #----------------------------------------------------------------------------------------------
-import time
+import time, re, json, os
 
 
 #----------------------------------------------------------------------------------------------
-# FUNCIONES
+# FUNCIONES PARA MULTIPLES ENTIDADES
+#----------------------------------------------------------------------------------------------
+def validarEmail(email, entidad):
+    """
+    Valida un email usando expresiones regulares, viendo que no se repita.
+
+    Parámetros:
+        email (str): Email a validar.
+        entidad (dict): Diccionario usado para verificar que no se repita el email.
+
+    Devuelve:
+        bool: True si es válido, False en caso contrario.
+    """            
+    patron = r'^[a-zA-Z0-9._+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9.-]+$'
+    retorno = re.match(patron, email)
+    if retorno is not None:
+        for clave, datos in entidad.items():
+            if datos.get("email") == email:
+                print("Email inválido (ya utilizado)")
+                return False
+        return True
+    else:
+        print("Email inválido")
+        return False
+
+def guardarEntidad(entidad, contenido):
+    """
+    Sobreescribe el archivo JSON de la entidad solicitada
+
+    Parámetros:
+        entidad (str): socios, deportes o pagos.
+        contenido (dict): Contenido nuevo del JSON.
+
+    Devuelve:
+        n/a.
+    """
+    try:
+        f = open(f"{entidad}.json", "w", encoding="utf-8")  # Abrimos en modo escritura
+        json.dump(contenido, f, ensure_ascii=False, indent=4)  # Guardamos el diccionario en formato JSON
+        f.close()
+    except FileNotFoundError:
+        print(f"Archivo '{entidad}.json' no encontrado.")
+    return
+
+def obtenerEntidad(entidad):
+    """
+    Obtiene el diccionario de la entidad solicitada
+
+    Parámetros:
+        entidad (str): socios, deportes o pagos.
+
+    Devuelve:
+        retorno (dict): Contenido obtenido.
+    """
+    try:
+        f = open(f"{entidad}.json", "r", encoding="utf-8")  # Abrimos en modo lectura
+        retorno = json.load(f)  # Cargamos el contenido como diccionario
+        f.close()
+        return retorno
+    except FileNotFoundError:
+        print(f"Archivo '{entidad}.json' no encontrado.")
+    return
+
+
+#----------------------------------------------------------------------------------------------
+# FUNCIONES DE SOCIOS
 #----------------------------------------------------------------------------------------------
 def altaSocio(clientes, buscar):
     """
@@ -64,7 +131,12 @@ def altaSocio(clientes, buscar):
         mesNacimiento = "0" + str(mesNacimiento)
     fechaNacimiento = f"{str(diaNacimiento)}/{str(mesNacimiento)}/{str(anioNacimiento)}"
 
-    clientes[buscar] = {"activo": True, "nombre": nombre, "apellido": apellido, "fechaNacimiento": fechaNacimiento, "telefonos": {} }
+    emailValido = False
+    while emailValido == False:
+        email = str(input("Indique su Email (ej: maildeejemplo@gmail.com): ")).lower()
+        emailValido = validarEmail(email, clientes)
+
+    clientes[buscar] = {"activo": True, "nombre": nombre, "apellido": apellido, "fechaNacimiento": fechaNacimiento, "email": email, "telefonos": {} }
 
     numTelefonos = int(input("Cantidad de telefonos: ")) # Atributo multivaluado
     while numTelefonos < 1:
@@ -77,8 +149,7 @@ def altaSocio(clientes, buscar):
 
     print("Socio agregado exitosamente")
 
-    return clientes
-    
+    return clientes 
 
 def listarSocios(clientes):
     """
@@ -96,6 +167,7 @@ def listarSocios(clientes):
             print("\nNombre:", cliente["nombre"])
             print("Apellido:", cliente["apellido"])
             print("Fecha de nacimiento:", cliente["fechaNacimiento"])
+            print("Email:", cliente["email"])
             telefonos = clientes[dni]["telefonos"]
             for k, telefono in telefonos.items():
                 print(k + ":", telefono)
@@ -123,7 +195,8 @@ def modificarSocio(clientes, buscar):
         print("[2] Modificar nombre")
         print("[3] Modificar apellido")
         print("[4] Modificar fecha de nacimiento")
-        print("[5] Modificar telefonnos")
+        print("[5] Modificar email")
+        print("[6] Modificar telefonos")
         print("---------------------------")
         print("[0] Volver al menú anterior")
         print("---------------------------")
@@ -194,8 +267,18 @@ def modificarSocio(clientes, buscar):
             fechaNacimiento = f"{str(diaNacimiento)}/{str(mesNacimiento)}/{str(anioNacimiento)}"
             clientes[buscar]["fechaNacimiento"] = fechaNacimiento
             print("Fecha de nacimiento cambiada existosamente")
-
+        
         elif (userInput == 5):
+            print("Email actual: ", clientes[buscar]["email"])
+            emailValido = False
+            while emailValido == False:
+                email = str(input("Indique su Email (ej: maildeejemplo@gmail.com): ")).lower()
+                emailValido = validarEmail(email)
+            clientes[buscar]["email"] = email
+            print("Apellido cambiado existosamente")
+            
+
+        elif (userInput == 6):
             print("Actual cant de telefonos: ", len(clientes[buscar]["telefonos"])) # Atributo multivaluado
             numTelefonos = int(input("Cantidad de telefonos: "))
             while numTelefonos < 1:
@@ -300,7 +383,6 @@ def crearDeporte(deportes, busqueda):
                 print("Operación cancelada.")
     return deportes
 
-
 def listaDeDeportes(deportes):
     """
     Muestra todos los deportes activos (sin fecha de cierre).
@@ -326,7 +408,6 @@ def listaDeDeportes(deportes):
         print("---------------------------")
     
     return
-
 
 def modificarDeporte(deportes):
     """
@@ -391,8 +472,6 @@ def modificarDeporte(deportes):
                     print("Modificación cancelada\n")
 
     return deportes
-
-
 
 def eliminarDeporte(deportes):
     """
@@ -715,7 +794,6 @@ def matrizInforme2(pagos, anoObjetivo):
 
     return matriz
 
-
 def rellenar(texto, ancho, alineacion):
     """
     Función auxiliar para formatear texto y asegurar un ancho fijo, útil para tablas. Recorta el texto si es más largo que el ancho y rellena con espacios si es más corto.
@@ -833,12 +911,14 @@ def main():
     #-------------------------------------------------
     # Inicialización de variables
     #----------------------------------------------------------------------------------------------
+    """
     socios = {
         "11222333": {
             "activo": False,
             "nombre": "Federico",
             "apellido": "Sznajderhaus",
             "fechaNacimiento": "07/04/2006",
+            "email": "fsz@gmail.com",
             "telefonos": {
                 "telefono1": 5491125456655,
                 "telefono2": 5491134546589
@@ -849,6 +929,7 @@ def main():
             "nombre": "Nicolás",
             "apellido": "Sánchez",
             "fechaNacimiento": "02/09/2002",
+            "email": "nsanchez@gmail.com",
             "telefonos": {
                 "telefono1": 5491134560987
             }
@@ -858,6 +939,7 @@ def main():
             "nombre": "María",
             "apellido": "Fernández",
             "fechaNacimiento": "15/01/1998",
+            "email": "mhernandez@gmail.com",
             "telefonos": {
                 "telefono1": 5491145671234
             }
@@ -867,6 +949,7 @@ def main():
             "nombre": "Julián",
             "apellido": "Pérez",
             "fechaNacimiento": "20/05/2000",
+            "email": "jperez@gmail.com",
             "telefonos": {
                 "telefono1": 5491139876543,
                 "telefono2": 5491123456789
@@ -877,6 +960,7 @@ def main():
             "nombre": "Sofía",
             "apellido": "Martínez",
             "fechaNacimiento": "03/11/2003",
+            "email": "smartinez@gmail.com",
             "telefonos": {
                 "telefono1": 5491165432198
             }
@@ -886,6 +970,7 @@ def main():
             "nombre": "Lucas",
             "apellido": "González",
             "fechaNacimiento": "28/07/1999",
+            "email": "lgonzalez@gmail.com",
             "telefonos": {
                 "telefono1": 5491122223333,
                 "telefono2": 5491176543210
@@ -896,6 +981,7 @@ def main():
             "nombre": "Camila",
             "apellido": "Rodríguez",
             "fechaNacimiento": "12/12/2001",
+            "email": "crodriguez@gmail.com",
             "telefonos": {
                 "telefono1": 5491187654321
             }
@@ -905,6 +991,7 @@ def main():
             "nombre": "Martín",
             "apellido": "López",
             "fechaNacimiento": "25/06/2004",
+            "email": "mlopez@gmail.com",
             "telefonos": {
                 "telefono1": 5491132109876,
                 "telefono2": 5491198765432
@@ -915,6 +1002,7 @@ def main():
             "nombre": "Valentina",
             "apellido": "Díaz",
             "fechaNacimiento": "09/09/1997",
+            "email": "vdiaz@gmail.com",
             "telefonos": {
                 "telefono1": 5491144445555
             }
@@ -924,6 +1012,7 @@ def main():
             "nombre": "Tomás",
             "apellido": "Suárez",
             "fechaNacimiento": "18/03/2005",
+            "email": "tsuarez@gmail.com",
             "telefonos": {
                 "telefono1": 5491155556666,
                 "telefono2": 5491177778888
@@ -934,6 +1023,7 @@ def main():
             "nombre": "Agustina",
             "apellido": "Romero",
             "fechaNacimiento": "30/10/2002",
+            "email": "aromero@gmail.com",
             "telefonos": {
                 "telefono1": 5491166667777
             }
@@ -943,14 +1033,13 @@ def main():
             "nombre": "Diego",
             "apellido": "Castro",
             "fechaNacimiento": "05/08/2000",
+            "email": "dcastro@gmail.com",
             "telefonos": {
                 "telefono1": 5491133334444,
                 "telefono2": 5491199990000
             }
         }
     }
-    
-
     deportes = {
         "netball": {
             "activo": False,
@@ -1049,8 +1138,6 @@ def main():
             }
         }
     }
-    
-
     pagos = {
         "2025.10.15 17:34:18": {
             "idSocio": "11222333",
@@ -1144,259 +1231,277 @@ def main():
         },
 
     } # Nuevo diccionario para almacenar los pagos
+    """
+    print(f"El programa se está ejecutando en: {os.getcwd()}")
+    print(f"se busca ejecutar en: {os.path.dirname(os.path.abspath(__file__))}")
+    socios = obtenerEntidad("socios")
+    print(socios)
+    deportes = obtenerEntidad("deportes")
+    print(deportes)
+    pagos = obtenerEntidad("pagos")
+    print(pagos)
 
 
 
     #-------------------------------------------------
     # Bloque de menú
     #----------------------------------------------------------------------------------------------
-    while True:
+    if socios is not None and deportes is not None and pagos is not None:
         while True:
-            opciones = 4
+            while True:
+                opciones = 4
+                print()
+                print("---------------------------")
+                print("MENÚ PRINCIPAL")
+                print("---------------------------")
+                print("[1] Gestión de socios")
+                print("[2] Gestión de deportes")
+                print("[3] Gestión de pagos")
+                print("[4] Informes")
+                print("---------------------------")
+                print("[0] Salir del programa")
+                print("---------------------------")
+                print()
+                
+                opcionSubmenu = ""
+                opcionMenuPrincipal = input("Seleccione una opción: ")
+                if opcionMenuPrincipal in [str(i) for i in range(0, opciones + 1)]: # Sólo continua si se elije una opcion de menú válida
+                    break
+                else:
+                    input("Opción inválida. Presione ENTER para volver a seleccionar.")
             print()
-            print("---------------------------")
-            print("MENÚ PRINCIPAL")
-            print("---------------------------")
-            print("[1] Gestión de socios")
-            print("[2] Gestión de deportes")
-            print("[3] Gestión de pagos")
-            print("[4] Informes")
-            print("---------------------------")
-            print("[0] Salir del programa")
-            print("---------------------------")
-            print()
+
+            if opcionMenuPrincipal == "0": # Opción salir del programa
+                exit() # También puede ser sys.exit() para lo cual hay que importar el módulo sys
+
+            elif opcionMenuPrincipal == "1":   # Opción 1 del menú principal
+                while True:
+                    while True:
+                        opciones = 4
+                        print()
+                        print("---------------------------")
+                        print("MENÚ PRINCIPAL > MENÚ DE SOCIOS")
+                        print("---------------------------")
+                        print("[1] Ingresar socio")
+                        print("[2] listar socios activos")
+                        print("[3] Modificar socio")
+                        print("[4] Eliminar socio")
+                        print("---------------------------")
+                        print("[0] Volver al menú anterior")
+                        print("---------------------------")
+                        print()
+                        
+                        opcionSubmenu = input("Seleccione una opción: ")
+                        if opcionSubmenu in [str(i) for i in range(0, opciones + 1)]: # Sólo continua si se elije una opcion de menú válida
+                            break
+                        else:
+                            input("Opción inválida. Presione ENTER para volver a seleccionar.")
+                    print()
+
+                    if opcionSubmenu == "0": # Opción salir del submenú
+                        break # No sale del programa, sino que vuelve al menú anterior
+
+
+                    if (opcionSubmenu == "1" or opcionSubmenu == "3" or opcionSubmenu == "4"):
+                        dniBuscar = input("Ingresar dni: ")
+                        while dniBuscar.isdigit() == False:
+                            dniBuscar = input("Ingresar dni válido: ")
+
+                    if opcionSubmenu == "1":   # Opción 1 del submenú
+                        if (dniBuscar in socios.keys()):
+                            print("Error, el socio ya existe.\n")
+                            print(socios[dniBuscar])
+                        else:
+                            socios = altaSocio(socios, dniBuscar)
+                            guardarEntidad("socios", socios)
+                        
+                    elif opcionSubmenu == "2":   # Opción 2 del submenú
+                        listarSocios(socios)
+                    
+                    elif opcionSubmenu == "3":   # Opción 3 del submenú
+                        if (dniBuscar not in socios.keys()):
+                            print("Error, el socio no existe.\n")
+                        else:
+                            socios = modificarSocio(socios, dniBuscar)
+                            guardarEntidad("socios", socios)
+                        
+                    elif opcionSubmenu == "4":   # Opción 4 del submenú
+                        socios = bajaSocio(socios, pagos, dniBuscar)
+                        guardarEntidad("socios", socios)
+
+                    input("\nPresione ENTER para volver al menú.") # Pausa entre opciones
+                    print("\n\n")
+
+
+            elif opcionMenuPrincipal == "2":   # Opción 2 del menú principal
+                while True:
+                    while True:
+                        opciones = 4
+                        print()
+                        print("---------------------------")
+                        print("MENÚ PRINCIPAL > MENÚ DE DEPORTES")
+                        print("---------------------------")
+                        print("[1] Ingresar deporte")
+                        print("[2] Listar deportes")
+                        print("[3] Modificar deporte")
+                        print("[4] Eliminar deporte")
+                        print("---------------------------")
+                        print("[0] Volver al menú anterior")
+                        print("---------------------------")
+                        print()
+                        
+                        opcionSubmenu = input("Seleccione una opción: ")
+                        if opcionSubmenu in [str(i) for i in range(0, opciones + 1)]: # Sólo continua si se elije una opcion de menú válida
+                            break
+                        else:
+                            input("Opción inválida. Presione ENTER para volver a seleccionar.")
+                    print()
+
+
+                    if opcionSubmenu == "0": # Opción salir del submenú
+                        break # No sale del programa, sino que vuelve al menú anterior
+                    
+                    elif opcionSubmenu == "1":   # Opción 1 del submenú
+                        deporte = str(input("Ingresar deporte: ").lower())
+                        deportes = crearDeporte(deportes, deporte)
+                        guardarEntidad("deportes", deportes)
+                        
+                    elif opcionSubmenu == "2":   # Opción 2 del submenú
+                        listaDeDeportes(deportes)
+                    
+                    elif opcionSubmenu == "3":   # Opción 3 del submenú
+                        deportes = modificarDeporte(deportes)
+                        guardarEntidad("deportes", deportes)
+                    
+                    elif opcionSubmenu == "4":   # Opción 4 del submenú
+                        deportes = eliminarDeporte(deportes)
+                        guardarEntidad("deportes", deportes)
+
+                    input("\nPresione ENTER para volver al menú.") # Pausa entre opciones
+                    print("\n\n")
+
+
             
-            opcionSubmenu = ""
-            opcionMenuPrincipal = input("Seleccione una opción: ")
-            if opcionMenuPrincipal in [str(i) for i in range(0, opciones + 1)]: # Sólo continua si se elije una opcion de menú válida
-                break
-            else:
-                input("Opción inválida. Presione ENTER para volver a seleccionar.")
-        print()
-
-        if opcionMenuPrincipal == "0": # Opción salir del programa
-            exit() # También puede ser sys.exit() para lo cual hay que importar el módulo sys
-
-        elif opcionMenuPrincipal == "1":   # Opción 1 del menú principal
-            while True:
+            elif opcionMenuPrincipal == "3":   # Opción 3 del menú principal
                 while True:
-                    opciones = 4
+                    while True:
+                        opciones = 2
+                        print()
+                        print("---------------------------")
+                        print("MENÚ PRINCIPAL > MENÚ DE PAGOS")
+                        print("---------------------------")
+                        print("[1] Ingresar pago")
+                        print("[2] Eliminar pago")
+                        print("---------------------------")
+                        print("[0] Volver al menú anterior")
+                        print("---------------------------")
+                        print()
+                        
+                        opcionSubmenu = input("Seleccione una opción: ")
+                        if opcionSubmenu in [str(i) for i in range(0, opciones + 1)]: # Sólo continua si se elije una opcion de menú válida
+                            break
+                        else:
+                            input("Opción inválida. Presione ENTER para volver a seleccionar.")
                     print()
-                    print("---------------------------")
-                    print("MENÚ PRINCIPAL > MENÚ DE SOCIOS")
-                    print("---------------------------")
-                    print("[1] Ingresar socio")
-                    print("[2] listar socios activos")
-                    print("[3] Modificar socio")
-                    print("[4] Eliminar socio")
-                    print("---------------------------")
-                    print("[0] Volver al menú anterior")
-                    print("---------------------------")
-                    print()
+
+                    if opcionSubmenu == "0": # Opción salir del submenú
+                        break # No sale del programa, sino que vuelve al menú anterior
                     
-                    opcionSubmenu = input("Seleccione una opción: ")
-                    if opcionSubmenu in [str(i) for i in range(0, opciones + 1)]: # Sólo continua si se elije una opcion de menú válida
-                        break
-                    else:
-                        input("Opción inválida. Presione ENTER para volver a seleccionar.")
-                print()
+                    elif opcionSubmenu == "1":   # Opción 1 del submenú
+                        pagos = registrarPago(pagos, socios, deportes)
+                        guardarEntidad("pagos", pagos)
+                        
+                    elif opcionSubmenu == "2":   # Opción 2 del submenú
+                        pagos = eliminarPago(pagos, socios)
+                        guardarEntidad("pagos", pagos)
 
-                if opcionSubmenu == "0": # Opción salir del submenú
-                    break # No sale del programa, sino que vuelve al menú anterior
-
-
-                if (opcionSubmenu == "1" or opcionSubmenu == "3" or opcionSubmenu == "4"):
-                    dniBuscar = input("Ingresar dni: ")
-                    while dniBuscar.isdigit() == False:
-                        dniBuscar = input("Ingresar dni válido: ")
-
-                if opcionSubmenu == "1":   # Opción 1 del submenú
-                    if (dniBuscar in socios.keys()):
-                        print("Error, el socio ya existe.\n")
-                        print(socios[dniBuscar])
-                    else:
-                        socios = altaSocio(socios, dniBuscar)
-                    
-                elif opcionSubmenu == "2":   # Opción 2 del submenú
-                    listarSocios(socios)
-                
-                elif opcionSubmenu == "3":   # Opción 3 del submenú
-                    if (dniBuscar not in socios.keys()):
-                        print("Error, el socio no existe.\n")
-                    else:
-                        socios = modificarSocio(socios, dniBuscar)
-                    
-                elif opcionSubmenu == "4":   # Opción 4 del submenú
-                    socios = bajaSocio(socios, pagos, dniBuscar)
-
-                input("\nPresione ENTER para volver al menú.") # Pausa entre opciones
-                print("\n\n")
+                    input("\nPresione ENTER para volver al menú.") # Pausa entre opciones
+                    print("\n\n")
 
 
-        elif opcionMenuPrincipal == "2":   # Opción 2 del menú principal
-            while True:
+            
+            elif opcionMenuPrincipal == "4":   # Opción 4 del menú principal
                 while True:
-                    opciones = 4
+                    while True:
+                        opciones = 4
+                        print()
+                        print("---------------------------")
+                        print("MENÚ PRINCIPAL > MENÚ DE INFORMES")
+                        print("---------------------------")
+                        print("[1] Pagos del mes")
+                        print("[2] Resumen Anual de cantidad de pagos por deporte")
+                        print("[3] Resumen Anual de Pagos  (Montos cobrados, deudas, descuentos)")
+                        print("[4] Resumen Anual de Métodos de Pago")
+                        print("---------------------------")
+                        print("[0] Volver al menú anterior")
+                        print("---------------------------")
+                        print()
+                        
+                        opcionSubmenu = input("Seleccione una opción: ")
+                        if opcionSubmenu in [str(i) for i in range(0, opciones + 1)]: # Sólo continua si se elije una opcion de menú válida
+                            break
+                        else:
+                            input("Opción inválida. Presione ENTER para volver a seleccionar.")
                     print()
-                    print("---------------------------")
-                    print("MENÚ PRINCIPAL > MENÚ DE DEPORTES")
-                    print("---------------------------")
-                    print("[1] Ingresar deporte")
-                    print("[2] Listar deportes")
-                    print("[3] Modificar deporte")
-                    print("[4] Eliminar deporte")
-                    print("---------------------------")
-                    print("[0] Volver al menú anterior")
-                    print("---------------------------")
-                    print()
+
+                    if opcionSubmenu == "0": # Opción salir del submenú
+                        break # No sale del programa, sino que vuelve al menú anterior
                     
-                    opcionSubmenu = input("Seleccione una opción: ")
-                    if opcionSubmenu in [str(i) for i in range(0, opciones + 1)]: # Sólo continua si se elije una opcion de menú válida
-                        break
-                    else:
-                        input("Opción inválida. Presione ENTER para volver a seleccionar.")
-                print()
+                    elif opcionSubmenu == "1":   # Opción 1 del submenú
+                        mes = int(time.strftime("%m"))
+                        ano = int(time.strftime("%Y"))
+    
 
+                        matrizInformes1(pagos, socios, mes, ano)
 
-                if opcionSubmenu == "0": # Opción salir del submenú
-                    break # No sale del programa, sino que vuelve al menú anterior
-                
-                elif opcionSubmenu == "1":   # Opción 1 del submenú
-                    deporte = str(input("Ingresar deporte: ").lower())
-                    deportes = crearDeporte(deportes, deporte)
-                    
-                elif opcionSubmenu == "2":   # Opción 2 del submenú
-                    listaDeDeportes(deportes)
-                
-                elif opcionSubmenu == "3":   # Opción 3 del submenú
-                    deportes = modificarDeporte(deportes)
-                
-                elif opcionSubmenu == "4":   # Opción 4 del submenú
-                    deportes = eliminarDeporte(deportes)
-
-                input("\nPresione ENTER para volver al menú.") # Pausa entre opciones
-                print("\n\n")
-
+                    elif opcionSubmenu == "2":   # Opción 2 del submenú
+                        
+                        anoIngresado = int(input("Ingrese el año para el informe (ej: 2023): "))
+                        while anoIngresado < 1900 or anoIngresado > int(time.strftime("%Y")):
+                            anoIngresado = int(input("Año inválido. Ingrese un año válido: "))
+                            
+                        matriz = matrizInforme2(pagos, anoIngresado)
 
         
-        elif opcionMenuPrincipal == "3":   # Opción 3 del menú principal
-            while True:
-                while True:
-                    opciones = 2
-                    print()
-                    print("---------------------------")
-                    print("MENÚ PRINCIPAL > MENÚ DE PAGOS")
-                    print("---------------------------")
-                    print("[1] Ingresar pago")
-                    print("[2] Eliminar pago")
-                    print("---------------------------")
-                    print("[0] Volver al menú anterior")
-                    print("---------------------------")
-                    print()
-                    
-                    opcionSubmenu = input("Seleccione una opción: ")
-                    if opcionSubmenu in [str(i) for i in range(0, opciones + 1)]: # Sólo continua si se elije una opcion de menú válida
-                        break
-                    else:
-                        input("Opción inválida. Presione ENTER para volver a seleccionar.")
-                print()
+                        anchoDeporte = 20
+                        anchoMes = 4
+                        meses = ["ENE", "FEB", "MAR", "ABR", "MAY", "JUN", "JUL", "AGO", "SEP", "OCT", "NOV", "DIC"]
 
-                if opcionSubmenu == "0": # Opción salir del submenú
-                    break # No sale del programa, sino que vuelve al menú anterior
                 
-                elif opcionSubmenu == "1":   # Opción 1 del submenú
-                    pagos = registrarPago(pagos, socios, deportes)
-                    
-                elif opcionSubmenu == "2":   # Opción 2 del submenú
-                    pagos = eliminarPago(pagos, socios)
+                        encabezado = rellenar("Deporte", anchoDeporte, "izquierda") + " | " + " | ".join(rellenar(m, anchoMes, "derecha") for m in meses)
+                        print(encabezado)
+                        print("-" * len(encabezado))
 
-                input("\nPresione ENTER para volver al menú.") # Pausa entre opciones
+            
+                        for deporte in matriz:
+                            fila = matriz[deporte]
+                            linea = rellenar(deporte, anchoDeporte, "izquierda") + " | " + " | ".join(rellenar(valor, anchoMes, "derecha") for valor in fila)
+                            print(linea)
+
+                    elif opcionSubmenu == "3":   # Opción 3 del submenú
+                    
+                        anoIngresado = int(input("Ingrese el año para el informe (ej: 2023): "))
+                        while anoIngresado < 1900 or anoIngresado > int(time.strftime("%Y")):
+                            anoIngresado = int(input("Año inválido. Ingrese un año válido: "))
+                        matrizInformes3(pagos, anoIngresado)
+
+                    elif opcionSubmenu == "4":   # Opción 4 del submenú
+                        anoIngresado = int(input("Ingrese el año para el informe (ej: 2023): "))
+                        while anoIngresado < 1900 or anoIngresado > int(time.strftime("%Y")):
+                            anoIngresado = int(input("Año inválido. Ingrese un año válido: "))
+                        print(f"\nResumen de métodos de pago para el año {anoIngresado}")
+                        print("Método de Pago     | Cantidad | Porcentaje")
+                        print("-------------------|----------|-----------")
+                        grupo = matrizInforme4(pagos, anoIngresado)
+                        for fila in grupo:
+                            print(f"{fila['metodoDePago']:<19}| {fila['cantidad']:^8} | {fila['porcentaje']:>9.2f}%")
+
+                    input("\nPresione ENTER para volver al menú.") # Pausa entre opciones
+                    print("\n\n")
+                    
+            if opcionSubmenu != "0": # Pausa entre opciones. No la realiza si se vuelve de un submenú
+                input("\nPresione ENTER para volver al menú.")
                 print("\n\n")
-
-
-           
-        elif opcionMenuPrincipal == "4":   # Opción 4 del menú principal
-            while True:
-                while True:
-                    opciones = 4
-                    print()
-                    print("---------------------------")
-                    print("MENÚ PRINCIPAL > MENÚ DE INFORMES")
-                    print("---------------------------")
-                    print("[1] Pagos del mes")
-                    print("[2] Resumen Anual de cantidad de pagos por deporte")
-                    print("[3] Resumen Anual de Pagos  (Montos cobrados, deudas, descuentos)")
-                    print("[4] Resumen Anual de Métodos de Pago")
-                    print("---------------------------")
-                    print("[0] Volver al menú anterior")
-                    print("---------------------------")
-                    print()
-                    
-                    opcionSubmenu = input("Seleccione una opción: ")
-                    if opcionSubmenu in [str(i) for i in range(0, opciones + 1)]: # Sólo continua si se elije una opcion de menú válida
-                        break
-                    else:
-                        input("Opción inválida. Presione ENTER para volver a seleccionar.")
-                print()
-
-                if opcionSubmenu == "0": # Opción salir del submenú
-                    break # No sale del programa, sino que vuelve al menú anterior
-                
-                elif opcionSubmenu == "1":   # Opción 1 del submenú
-                    mes = int(time.strftime("%m"))
-                    ano = int(time.strftime("%Y"))
-   
-
-                    matrizInformes1(pagos, socios, mes, ano)
-
-                elif opcionSubmenu == "2":   # Opción 2 del submenú
-                    
-                    anoIngresado = int(input("Ingrese el año para el informe (ej: 2023): "))
-                    while anoIngresado < 1900 or anoIngresado > int(time.strftime("%Y")):
-                        anoIngresado = int(input("Año inválido. Ingrese un año válido: "))
-                        
-                    matriz = matrizInforme2(pagos, anoIngresado)
-
-    
-                    anchoDeporte = 20
-                    anchoMes = 4
-                    meses = ["ENE", "FEB", "MAR", "ABR", "MAY", "JUN", "JUL", "AGO", "SEP", "OCT", "NOV", "DIC"]
-
-              
-                    encabezado = rellenar("Deporte", anchoDeporte, "izquierda") + " | " + " | ".join(rellenar(m, anchoMes, "derecha") for m in meses)
-                    print(encabezado)
-                    print("-" * len(encabezado))
-
-         
-                    for deporte in matriz:
-                        fila = matriz[deporte]
-                        linea = rellenar(deporte, anchoDeporte, "izquierda") + " | " + " | ".join(rellenar(valor, anchoMes, "derecha") for valor in fila)
-                        print(linea)
-
-                elif opcionSubmenu == "3":   # Opción 3 del submenú
-                
-                    anoIngresado = int(input("Ingrese el año para el informe (ej: 2023): "))
-                    while anoIngresado < 1900 or anoIngresado > int(time.strftime("%Y")):
-                        anoIngresado = int(input("Año inválido. Ingrese un año válido: "))
-                    matrizInformes3(pagos, anoIngresado)
-
-                elif opcionSubmenu == "4":   # Opción 4 del submenú
-                    anoIngresado = int(input("Ingrese el año para el informe (ej: 2023): "))
-                    while anoIngresado < 1900 or anoIngresado > int(time.strftime("%Y")):
-                        anoIngresado = int(input("Año inválido. Ingrese un año válido: "))
-                    print(f"\nResumen de métodos de pago para el año {anoIngresado}")
-                    print("Método de Pago     | Cantidad | Porcentaje")
-                    print("-------------------|----------|-----------")
-                    grupo = matrizInforme4(pagos, anoIngresado)
-                    for fila in grupo:
-                        print(f"{fila['metodoDePago']:<19}| {fila['cantidad']:^8} | {fila['porcentaje']:>9.2f}%")
-
-                input("\nPresione ENTER para volver al menú.") # Pausa entre opciones
-                print("\n\n")
-                
-        if opcionSubmenu != "0": # Pausa entre opciones. No la realiza si se vuelve de un submenú
-            input("\nPresione ENTER para volver al menú.")
-            print("\n\n")
 
 
 # Punto de entrada al programa

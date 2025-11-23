@@ -1,0 +1,92 @@
+{
+  "2025.10.15 17:34:18": {
+    "idSocio": "11222333",
+    "idDeporte": "tennis",
+    "estadoDePago": "pagado",
+    "monto": 25000.0,
+    "ano": 2025,
+    "mes": 10,
+    "metodoDePago": "efectivo"
+  },
+  "2025.10.20 14:24:48": {
+    "idSocio": "99888777",
+    "idDeporte": "boxeo",
+    "estadoDePago": "pagado",
+    "monto": 31000.0,
+    "ano": 2025,
+    "mes": 10,
+    "metodoDePago": "tarjeta"
+  },
+  "2025.10.21 10:15:32": {
+    "idSocio": "30456789",
+    "idDeporte": "natacion",
+    "estadoDePago": "pagado",
+    "monto": 32000.0,
+    "ano": 2025,
+    "mes": 10,
+    "metodoDePago": "efectivo"
+  },
+  "2025.10.22 11:45:00": {
+    "idSocio": "28543210",
+    "idDeporte": "football",
+    "estadoDePago": "pagado",
+    "monto": 30000.0,
+    "ano": 2025,
+    "mes": 10,
+    "metodoDePago": "tarjeta"
+  },
+  "2025.10.23 09:30:15": {
+    "idSocio": "32659874",
+    "idDeporte": "basketball",
+    "estadoDePago": "pagado",
+    "monto": 28000.0,
+    "ano": 2025,
+    "mes": 10,
+    "metodoDePago": "efectivo"
+  },
+  "2025.10.24 16:00:00": {
+    "idSocio": "29547681",
+    "idDeporte": "rugby",
+    "estadoDePago": "pagado",
+    "monto": 34000.0,
+    "ano": 2025,
+    "mes": 10,
+    "metodoDePago": "tarjeta"
+  },
+  "2025.10.25 13:22:45": {
+    "idSocio": "31478562",
+    "idDeporte": "voley",
+    "estadoDePago": "pagado",
+    "monto": 27000.0,
+    "ano": 2025,
+    "mes": 10,
+    "metodoDePago": "efectivo"
+  },
+  "2025.10.26 18:45:30": {
+    "idSocio": "27894561",
+    "idDeporte": "hockey",
+    "estadoDePago": "pagado",
+    "monto": 29000.0,
+    "ano": 2025,
+    "mes": 10,
+    "metodoDePago": "tarjeta"
+  },
+  "2025.10.27 12:10:50": {
+    "idSocio": "30985642",
+    "idDeporte": "jiuJitsu",
+    "estadoDePago": "pagado",
+    "monto": 28000.0,
+    "ano": 2025,
+    "mes": 10,
+    "metodoDePago": "efectivo"
+  },
+  "2025.10.28 14:55:20": {
+    "idSocio": "29765438",
+    "idDeporte": "karate",
+    "estadoDePago": "pagado",
+    "monto": 26000.0,
+    "ano": 2025,
+    "mes": 10,
+    "metodoDePago": "tarjeta"
+  }
+}

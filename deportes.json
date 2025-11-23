@@ -1,0 +1,123 @@
+{
+    "netball": {
+        "activo": false,
+        "arancel": 29000.0,
+        "director principal": "Robert Lee",
+        "fechasActividad": {
+            "fechas1": [
+                "10/01/2025",
+                "30/09/2025"
+            ]
+        }
+    },
+    "football": {
+        "activo": true,
+        "arancel": 35000.0,
+        "director principal": "Nicolás Medina",
+        "fechasActividad": {
+            "fechas1": [
+                "01/04/2025"
+            ]
+        }
+    },
+    "hockey": {
+        "activo": true,
+        "arancel": 27000.0,
+        "director principal": "Isabel Fuentes",
+        "fechasActividad": {
+            "fechas1": [
+                "14/02/2025"
+            ]
+        }
+    },
+    "basketball": {
+        "activo": true,
+        "arancel": 28000.0,
+        "director principal": "Isabel Martinez",
+        "fechasActividad": {
+            "fechas1": [
+                "28/02/2025"
+            ]
+        }
+    },
+    "voley": {
+        "activo": true,
+        "arancel": 29000.0,
+        "director principal": "Thiago Ribeiro",
+        "fechasActividad": {
+            "fechas1": [
+                "10/01/2025"
+            ]
+        }
+    },
+    "jiuJitsu": {
+        "activo": true,
+        "arancel": 26000.0,
+        "director principal": "Bruno Sosa",
+        "fechasActividad": {
+            "fechas1": [
+                "05/05/2025"
+            ]
+        }
+    },
+    "boxeo": {
+        "activo": true,
+        "arancel": 37000.0,
+        "director principal": "Carla Vázquez",
+        "fechasActividad": {
+            "fechas1": [
+                "18/03/2025"
+            ]
+        }
+    },
+    "karate": {
+        "activo": true,
+        "arancel": 31000.0,
+        "director principal": "Lucía Herrera",
+        "fechasActividad": {
+            "fechas1": [
+                "01/06/2025"
+            ]
+        }
+    },
+    "tennis": {
+        "activo": true,
+        "arancel": 28000.0,
+        "director principal": "Tomás Villalba",
+        "fechasActividad": {
+            "fechas1": [
+                "10/07/2025"
+            ]
+        }
+    },
+    "natacion": {
+        "activo": true,
+        "arancel": 33000.0,
+        "director principal": "Esteban Ríos",
+        "fechasActividad": {
+            "fechas1": [
+                "25/04/2025"
+            ]
+        }
+    },
+    "handball": {
+        "activo": true,
+        "arancel": 29000.0,
+        "director principal": "María Elena Torres",
+        "fechasActividad": {
+            "fechas1": [
+                "05/02/2025"
+            ]
+        }
+    },
+    "rugby": {
+        "activo": true,
+        "arancel": 40000.0,
+        "director principal": "Federico Ledesma",
+        "fechasActividad": {
+            "fechas1": [
+                "15/01/2025"
+            ]
+        }
+    }
+}

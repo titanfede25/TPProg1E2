@@ -1,51 +1,128 @@
 {
-    "20123456": {
-        "activo": true,
-        "nombre": "federico",
-        "apellido": "Sznajderhaus",
-        "fechaNacimiento": "15/03/1995",
-        "telefonos": {
-            "telefono1": 1145678901,
-            "telefono2": 34112345678
-        }
-    },
-    "30123456": {
+    "11222333": {
         "activo": false,
-        "nombre": "Benjam\u00edn",
-        "apellido": "Moyano",
-        "fechaNacimiento": "02/07/1988",
+        "nombre": "Federico",
+        "apellido": "Sznajderhaus",
+        "fechaNacimiento": "07/04/2006",
+        "email": "fsz@gmail.com",
         "telefonos": {
-            "telefono1": 1122334455
+            "telefono1": 5491125456655,
+            "telefono2": 5491134546589
         }
     },
-    "40123456": {
+    "99888777": {
         "activo": true,
-        "nombre": "Samuel",
-        "apellido": "Franco Salazar",
-        "fechaNacimiento": "10/10/2000",
+        "nombre": "Nicolás",
+        "apellido": "Sánchez",
+        "fechaNacimiento": "02/09/2002",
+        "email": "nsanchez@gmail.com",
         "telefonos": {
-            "telefono1": 1155550000,
+            "telefono1": 5491134560987
+        }
+    },
+    "30456789": {
+        "activo": true,
+        "nombre": "María",
+        "apellido": "Fernández",
+        "fechaNacimiento": "15/01/1998",
+        "email": "mhernandez@gmail.com",
+        "telefonos": {
+            "telefono1": 5491145671234
+        }
+    },
+    "28543210": {
+        "activo": true,
+        "nombre": "Julián",
+        "apellido": "Pérez",
+        "fechaNacimiento": "20/05/2000",
+        "email": "jperez@gmail.com",
+        "telefonos": {
+            "telefono1": 5491139876543,
             "telefono2": 5491123456789
         }
     },
-    "50123456": {
+    "32659874": {
         "activo": true,
-        "nombre": "Galo",
-        "apellido": "Barus",
-        "fechaNacimiento": "22/11/1999",
+        "nombre": "Sofía",
+        "apellido": "Martínez",
+        "fechaNacimiento": "03/11/2003",
+        "email": "smartinez@gmail.com",
         "telefonos": {
-            "telefono1": 1148484848,
-            "telefono2": 1148484849,
-            "telefono3": 1148484850
+            "telefono1": 5491165432198
         }
     },
-    "12345678": {
+    "29547681": {
         "activo": true,
-        "nombre": "Ejemplo",
-        "apellido": "Usuario",
-        "fechaNacimiento": "01/01/1970",
+        "nombre": "Lucas",
+        "apellido": "González",
+        "fechaNacimiento": "28/07/1999",
+        "email": "lgonzalez@gmail.com",
         "telefonos": {
-            "telefono1": 1120000000
+            "telefono1": 5491122223333,
+            "telefono2": 5491176543210
+        }
+    },
+    "31478562": {
+        "activo": true,
+        "nombre": "Camila",
+        "apellido": "Rodríguez",
+        "fechaNacimiento": "12/12/2001",
+        "email": "crodriguez@gmail.com",
+        "telefonos": {
+            "telefono1": 5491187654321
+        }
+    },
+    "27894561": {
+        "activo": true,
+        "nombre": "Martín",
+        "apellido": "López",
+        "fechaNacimiento": "25/06/2004",
+        "email": "mlopez@gmail.com",
+        "telefonos": {
+            "telefono1": 5491132109876,
+            "telefono2": 5491198765432
+        }
+    },
+    "30985642": {
+        "activo": true,
+        "nombre": "Valentina",
+        "apellido": "Díaz",
+        "fechaNacimiento": "09/09/1997",
+        "email": "vdiaz@gmail.com",
+        "telefonos": {
+            "telefono1": 5491144445555
+        }
+    },
+    "29765438": {
+        "activo": true,
+        "nombre": "Tomás",
+        "apellido": "Suárez",
+        "fechaNacimiento": "18/03/2005",
+        "email": "tsuarez@gmail.com",
+        "telefonos": {
+            "telefono1": 5491155556666,
+            "telefono2": 5491177778888
+        }
+    },
+    "31247859": {
+        "activo": true,
+        "nombre": "Agustina",
+        "apellido": "Romero",
+        "fechaNacimiento": "30/10/2002",
+        "email": "aromero@gmail.com",
+        "telefonos": {
+            "telefono1": 5491166667777
+        }
+    },
+    "28965473": {
+        "activo": true,
+        "nombre": "Diego",
+        "apellido": "Castro",
+        "fechaNacimiento": "05/08/2000",
+        "email": "dcastro@gmail.com",
+        "telefonos": {
+            "telefono1": 5491133334444,
+            "telefono2": 5491199990000
         }
     }
 }
