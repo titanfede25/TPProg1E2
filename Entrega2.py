@@ -12,7 +12,7 @@ Pendientes:
 COMENTARIOS/OBSERVACIONES PARA EL PROFE: 
     No agregamos email a deportes ya que eso requeriría contar con un dominio de email institucional, debiendo hacer una validación distinta (no se busca hacerlo sin manejo de expresiones regulares). Otra opción sería crear un mail para cada deporte por separado, pero no es conveniente en la vida real.
     Además de haber aplicado manejo de excepciones respecto a los archivos .json, tambien lo implementamos solo para el main porque si no, hubiera sido un código mucho más extenso de lo que es.
-    Decidimos hacer funciones genéricas para extraer y modificar archivos JSON, es lo más conveniente.
+    Decidimos hacer funciones genéricas para extraer y modificar archivos JSON, es lo más conveniente. Queremos evitar repetir mucho código. Hay ciertas funciones que requieren utlizar diversos diccionarios.
 -----------------------------------------------------------------------------------------------
 """
 
