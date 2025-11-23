@@ -12,6 +12,7 @@ Pendientes:
 COMENTARIOS/OBSERVACIONES PARA EL PROFE: 
     No agregamos email a deportes ya que eso requeriría contar con un dominio de email institucional, debiendo hacer una validación distinta (no se busca hacerlo sin manejo de expresiones regulares). Otra opción sería crear un mail para cada deporte por separado, pero no es conveniente en la vida real.
     Además de haber aplicado manejo de excepciones respecto a los archivos .json, tambien lo implementamos solo para el main porque si no, hubiera sido un código mucho más extenso de lo que es.
+    Decidimos hacer funciones genéricas para extraer y modificar archivos JSON, es lo más conveniente.
 -----------------------------------------------------------------------------------------------
 """
 
@@ -62,8 +63,8 @@ def guardarEntidad(entidad, contenido):
         f = open(f"{entidad}.json", "w", encoding="utf-8")  # Abrimos en modo escritura
         json.dump(contenido, f, ensure_ascii=False, indent=4)  # Guardamos el diccionario en formato JSON
         f.close()
-    except FileNotFoundError:
-        print(f"Archivo '{entidad}.json' no encontrado.")
+    except (FileNotFoundError, OSError) as detalle:
+        print(f"El Archivo '{entidad}.json' no se pudo abrir: {detalle}")
     return
 
 def obtenerEntidad(entidad):
@@ -81,8 +82,8 @@ def obtenerEntidad(entidad):
         retorno = json.load(f)  # Cargamos el contenido como diccionario
         f.close()
         return retorno
-    except FileNotFoundError:
-        print(f"Archivo '{entidad}.json' no encontrado.")
+    except (FileNotFoundError, OSError) as detalle:
+        print(f"El Archivo '{entidad}.json' no se pudo abrir: {detalle}")
     return
 
 
@@ -275,7 +276,7 @@ def modificarSocio(clientes, buscar):
             emailValido = False
             while emailValido == False:
                 email = str(input("Indique su Email (ej: maildeejemplo@gmail.com): ")).lower()
-                emailValido = validarEmail(email)
+                emailValido = validarEmail(email, clientes)
             clientes[buscar]["email"] = email
             print("Apellido cambiado existosamente")
             
@@ -1234,6 +1235,7 @@ def main():
 
     } # Nuevo diccionario para almacenar los pagos
     """
+
     print(f"El programa se está ejecutando en: {os.getcwd()}")
     print(f"se busca ejecutar en: {os.path.dirname(os.path.abspath(__file__))}")
     socios = obtenerEntidad("socios")
@@ -1505,7 +1507,7 @@ def main():
 
             except Exception: 
                 print("\n")
-                print("***************ALGO SALIO MAL. INICIANDO MENÚ PRINCIPAL DE NUEVO...***************")
+                print("*************** ALGO SALIO MAL. INICIANDO MENÚ PRINCIPAL DE NUEVO... ***************")
 
 
 # Punto de entrada al programa
