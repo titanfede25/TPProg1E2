@@ -19,7 +19,7 @@ COMENTARIOS/OBSERVACIONES PARA EL PROFE:
 #----------------------------------------------------------------------------------------------
 # MÓDULOS
 #----------------------------------------------------------------------------------------------
-import time, re, json, os
+import time, re, json
 
 
 #----------------------------------------------------------------------------------------------
@@ -84,7 +84,7 @@ def obtenerEntidad(entidad):
         return retorno
     except (FileNotFoundError, OSError) as detalle:
         print(f"El Archivo '{entidad}.json' no se pudo abrir: {detalle}")
-    return
+        return
 
 
 #----------------------------------------------------------------------------------------------
@@ -1236,8 +1236,7 @@ def main():
     } # Nuevo diccionario para almacenar los pagos
     """
 
-    print(f"El programa se está ejecutando en: {os.getcwd()}")
-    print(f"se busca ejecutar en: {os.path.dirname(os.path.abspath(__file__))}")
+    
     socios = obtenerEntidad("socios")
     deportes = obtenerEntidad("deportes")
     pagos = obtenerEntidad("pagos")
